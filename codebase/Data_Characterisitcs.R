@@ -18,7 +18,7 @@
 
 #______________________________________________________________________________
 ###Set-up working directory###
-setwd("~/Joule_Github") #Code for personal device
+setwd("~/GitHub/LDS-Inferences") #Code for personal device
 
 ###Load Packages and Dependencies
 library(maps)       
