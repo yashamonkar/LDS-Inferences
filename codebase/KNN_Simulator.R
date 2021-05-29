@@ -19,7 +19,7 @@
 
 #______________________________________________________________________________
 ###Set-up working directory###
-setwd("~/Joule_Github") #Code for personal device
+setwd("~/GitHub/LDS-Inferences") #Code for personal device
 
 ###Load Packages and Dependencies
 library(maps)       
@@ -241,9 +241,6 @@ source("functions/Get_Site_Correlation.R")
 
 #PC Eigenvector Analysis
 source("functions/Get_PCA_ggplot.R")
-
-#Energy Droughts
-source('functions/Get_Energy_Droughts.R')
 
 #Wind-Solar Seasonal Correlation
 source('functions/Get_Seasonal_Correlation.R')
