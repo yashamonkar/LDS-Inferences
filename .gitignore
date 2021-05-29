@@ -12,6 +12,9 @@ __pycache__/
 # Text Files 
 *.txt
 
+# Simulation RData Files 
+*.RData
+
 # Distribution / packaging
 .Python
 build/
