@@ -205,7 +205,7 @@ ynew_results <- NULL
 
 #KNN
 comb_knn <- list()
-load("simulations/KSTS_Joint_Simulations.RData")
+load("simulations/KNN_Joint_Simulations.RData")
 nl <- length(ynew_results)
 for(i in 1:nl){
   comb_knn[[i]] <- cbind(ynew_results[[i]]$WPnew, ynew_results[[i]]$SSnew)
