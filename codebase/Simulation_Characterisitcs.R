@@ -51,7 +51,7 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
                  header = TRUE) 
 
 ###Subset
-n <- 2*365
+n <- 5*365
 WP <- WP[1:n,]
 ssrd <- ssrd[1:n,]
 
