@@ -233,6 +233,9 @@ Fld <- apply(Fld, 2, function(x){x/max(x)})
 #   5. Threshold (thresh)
 #   6. Start_Date
 
+###Output
+#   1.  Single Severity vs Duration plots with boxplots for marginals.
+
 get_energy_droughts <- function(True_Data, 
                                 Field_Name,
                                 Sims_KSTS,
@@ -387,3 +390,234 @@ get_energy_droughts(True_Data = Fld,
                     thresh = 0.45,
                     Start_Date = "01-01-1979")
 
+
+
+#______________________________________________________________________________#
+###Function 3###
+#Objective - To compute the Annual Exceedance given data, simulations
+#             severity, duration and thresholds.
+###Inputs
+#   1. Original Data (True_Data)
+#   2. Field Name (Field_Name)
+#   3. KSTS Simulations (Sims_KSTS)
+#   4. KNN Simulations (Sims_KNN)
+#   5. Threshold (thresh)
+#   6. Start_Date
+
+###Output
+#
+
+
+#______________________________________________________________________________#
+###Function 3
+###Function to fit a log-fit to the output of severity duration.
+###Inputs
+#1. Data (Dat)
+#2. KSTS Simulations (Sims)
+#3. Threshold Percentile (Thresh)
+#4. Desired Severity [2] e.g. c(1.25,1.5)
+#5. Desired Duration [3] e.g. c(20,25,30)
+
+###Outputs
+#1. Panel Plot
+
+
+get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
+  
+  #Hyper-Parameters
+  thresh = Thresh
+  st_date = "01-01-1979"
+  mean_daily <- mean(rowSums(Dat))
+  nl <- length(comb_ksts)
+  
+  #Set-up Grid of Values
+  Dur = Durations
+  Sev = Severities
+  ngrids <- length(Sev)*length(Dur)
+  Sev_Dur <- data.frame(Duration = rep(Dur, each = length(Sev)),
+                        Severity = rep(Sev, length(Dur)))
+  
+  
+  #---------------------------------------------------------------------------#
+  ###Function to fit a log-fit to the output of severity duration.
+  ###Inputs of Function
+  #1. Severity-Duration for all Data.
+  #2. Desired Duration
+  #3. Desired Severity
+  #4. Mean Daily Value to facilitate comparision
+  #5. Number of Years
+  
+  ###Output 
+  #1. Annual Probability
+  
+  
+  get_annual_prob <- function(ED, Dur, Sev, MD, N_yr){
+    
+    #Load Packages
+    library(locfit)
+    
+    #Cleaning
+    ED$Severity <- ED$Severity/MD
+    ED$Severity <- log10(ED$Severity)
+    ED$Duration <- log10(ED$Duration)
+    
+    #Compute Exceedances
+    n_exceed <- list()
+    for(i in 1:nrow(ED)){
+      t_count <-  which(ED$Severity > ED$Severity[i] &
+                          ED$Duration > ED$Duration[i])
+      n_exceed[[i]] <- length(t_count)
+    }
+    ED$exc <- unlist(n_exceed)
+    
+    ###Local Regression for the Simulations
+    fit <- locfit(exc ~ Duration + Severity,family = "poisson",
+                  data=ED, alpha = 0.33)
+    
+    ###Predict the exceedances
+    exceed <- predict(fit, matrix(c(log10(Dur),log10(Sev)), nrow = 1))
+    
+    ##Compute the probability of annual exceedances
+    p_annual <- exceed/N_yr
+    
+    return(p_annual)
+    
+  }
+  
+  
+  #---------------------------------------------------------------------------#
+  ###Compute the severity and drought for the data.
+  #Source the function.
+  source("functions/Get_Severity_Duration.R")
+  
+  #Compute Severity and Duration for Data
+  Data_SD <- get_Severity_Duration(Data = Dat, Thresh = thresh,
+                                   start_date = st_date, Type = "Data")
+  data_pexc <- list()
+  for(i in 1:nrow(Sev_Dur)){
+    data_pexc[[i]] <- 100*get_annual_prob(ED = Data_SD, 
+                                          Dur = Sev_Dur$Duration[i],
+                                          Sev = Sev_Dur$Severity[i], 
+                                          MD = mean_daily, N_yr = 40)
+  }
+  data_pexc <- unlist(data_pexc)
+  
+  
+  #---------------------------------------------------------------------------#
+  ###Compute the severity and drought for the the simulations.
+  cores=detectCores()
+  registerDoParallel(cores)
+  sim_pexc <- list()
+  sim_pexc <- foreach(m = 1:nl, .verbose = TRUE) %dopar% {
+    
+    ###Load Functions
+    source("functions/Get_Severity_Duration.R")
+    
+    #Compute Severity and Duration for Simulations
+    KSTS_SD <- get_Severity_Duration(Data = Sims[[m]], Thresh = thresh,
+                                     start_date = st_date, Type = "Sims")
+    
+    get_annual_prob <- function(ED, Dur, Sev, MD, N_yr){
+      
+      #Load Packages
+      library(locfit)
+      
+      #Cleaning
+      ED$Severity <- ED$Severity/MD
+      ED$Severity <- log10(ED$Severity)
+      ED$Duration <- log10(ED$Duration)
+      
+      #Compute Exceedances
+      n_exceed <- list()
+      for(i in 1:nrow(ED)){
+        t_count <-  which(ED$Severity > ED$Severity[i] &
+                            ED$Duration > ED$Duration[i])
+        n_exceed[[i]] <- length(t_count)
+      }
+      ED$exc <- unlist(n_exceed)
+      
+      ###Local Regression for the Simulations
+      fit <- locfit(exc ~ Duration + Severity,family = "poisson",
+                    data=ED, alpha = 0.33)
+      
+      ###Predict the exceedances
+      exceed <- predict(fit, matrix(c(log10(Dur),log10(Sev)), nrow = 1))
+      
+      ##Compute the probability of annual exceedances
+      p_annual <- exceed/N_yr
+      
+      return(p_annual)
+      
+    }
+    
+    temp_pexc <- list()
+    for(i in 1:nrow(Sev_Dur)){
+      temp_pexc[[i]] <- 100*get_annual_prob(ED = KSTS_SD, 
+                                            Dur = Sev_Dur$Duration[i],
+                                            Sev = Sev_Dur$Severity[i], 
+                                            MD = mean_daily, N_yr = 40)
+    }
+    
+    sim_pexc[[m]] <- unlist(temp_pexc)
+  }
+  stopImplicitCluster()
+  
+  
+  #---------------------------------------------------------------------------#
+  ###Plotting the results
+  
+  #Generate Labels
+  class_labels <- list()
+  t = 1
+  for(i in 1:length(Dur)){
+    for(j in 1:length(Sev)){
+      class_labels[[t]] <- paste0("Dur = ", Dur[i], " days")
+      t = t+1
+    }
+  }
+  class_labels <- unlist(class_labels)
+  
+  #Simulations
+  sims_plot <- bind_rows(lapply(sim_pexc,data.frame))
+  sims_plot$Class <- as.factor(rep(1:ngrids, nl))
+  colnames(sims_plot) <- c("Exceedance", "Class")
+  sims_plot$Severity <- 100*rep(rep(Sev, length(Dur)), nl)
+  sims_plot$Severity <- paste0("Severity = ", sims_plot$Severity," %")
+  sims_plot$Duration <- rep(rep(Dur, each = length(Sev)), nl)
+  sims_plot$Duration <- as.factor(sims_plot$Duration)
+  
+  
+  #Data
+  data_plot <- data.frame(Exceedance = data_pexc,
+                          Class = as.factor(1:ngrids),
+                          Severity = 100*rep(Sev, length(Dur)))
+  data_plot$Severity <- paste0("Severity = ", data_plot$Severity," %")
+  data_plot$Duration <- rep(Dur, each = length(Sev))
+  data_plot$Duration <- as.factor(data_plot$Duration)
+  
+  #pdf(paste0("Energy_Droughts_",100*thresh,"_pt_SP.pdf"))
+  
+  p <- ggplot(sims_plot, aes(x=Duration, y=Exceedance)) + 
+    geom_boxplot() +
+    ggtitle(paste0("Energy Droughts & Annual Exceedances \n Threshold - ", thresh*100,"th Percentile")) +
+    ylab("Annual Exceedance Probabilities (%)") +
+    xlab("Duration (Days)") +
+    theme_bw() +
+    theme(axis.text=element_text(size=20),
+          axis.title=element_text(size=20),
+          plot.title = element_text(size=20),
+          strip.text = element_text(size=20))
+  
+  p <- p + facet_grid(Severity ~ ., scale = "free")
+  p <- p + geom_point(data_plot, mapping = aes(x=Duration, y=Exceedance), color = 'red', size = 2)
+  print(p)
+  
+  
+}
+
+
+#______________________________________________________________________________#
+###Run the function to compute exceedance probabilities###
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.21, 
+             Severities = c(1.25,1.5), Durations = c(20,25,30))
