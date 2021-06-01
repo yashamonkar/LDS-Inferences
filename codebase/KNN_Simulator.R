@@ -51,7 +51,7 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
 ###Set the KSTS Hyper-Parameters###
 
 ###Subset
-n <- 2*365
+n <- 5*365
 WP <- WP[1:n,]
 ssrd <- ssrd[1:n,]
 
@@ -247,8 +247,8 @@ source('functions/Get_Seasonal_Correlation.R')
 
 
 ###Simulation Hyper-Parameters###
-nneib <- 10
-nsim <- 8
+nneib <- 15
+nsim <- 20
 
 
 
