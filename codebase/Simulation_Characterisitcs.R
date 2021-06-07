@@ -82,6 +82,8 @@ for(i in 1:nl){
 ynew_results <- NULL
 
 
+#Create the Figure PDF
+pdf("figures/Simulation_Characteristics.pdf")
 
 #______________________________________________________________________________#
 ###Function 1### 
@@ -621,3 +623,7 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.21, 
              Severities = c(1.25,1.5), Durations = c(20,25,30))
+
+
+#Close the PDF
+dev.off()
