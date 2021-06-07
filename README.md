@@ -4,11 +4,12 @@ This is the code repository for the paper "Inferences on Long-Duration Storage R
 
 All code to replicate the work done in the paper along with the supplementery materials is archived here. 
 The scripts in the /codebase, when run, replicate the entire study along with additional cases and plots for an extensive analysis.
+Most individual sub-routines are stored as functions in /functions.
 
 The ERA-5 reanalysis data, for the Texas Interconnect region, is not added in this GitHub repository (due to size constraints) but is available at https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5. 
 The original dataset is in  NetCDF (.nc) format and the NetCDF_to_Text.R script in data/rawdata is used to convert it to text (.txt) format. 
 
-This work has been submitted to Joule (https://www.cell.com/joule/home) for consideration. 
+This work has been submitted to Joule (https://www.cell.com/joule/home) for consideration.
 
 
 Abstract:- 
