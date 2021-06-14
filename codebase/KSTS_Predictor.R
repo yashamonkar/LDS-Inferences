@@ -1,18 +1,17 @@
 #______________________________________________________________________________#
 ###K-Nearest Neighbor Space-Time Simulator (KSTS) in Prediction Mode###
-###NOTE:- WORK NOT INCLUDED IN THE JOULE Simulator (Work in Progress)###
+###NOTE:- WORK NOT INCLUDED IN THE JOULE Simulator###
 
 ###Data Inputs
 #1. Wind Data
 #2. Solar Data
-#3. Grid Location
+#3. Grid Locations
 
 ###Code Inputs
 #1. Functions for Simulation Checks
 
 ###Outputs
-#1. KSTS Simulations
-#2. Simulation Checks
+#1. KSTS Predictions. 
 
  
 #______________________________________________________________________________
@@ -49,7 +48,7 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
 ###Set the KSTS Hyper-Parameters###
 
 ###Subset
-n <- 5*365
+n <- 10*365
 WP <- WP[1:n,]
 ssrd <- ssrd[1:n,]
 
@@ -67,6 +66,12 @@ max_embd <- 2  #Max Value of Lagged Embedding
 sel_lags <- c(1,2) #Individual Lags Selected
 n_lags <- length(sel_lags) #Number of Lags
 w <- c(1,0) #Scaling Weights
+
+
+#Training-Testing-Validation Fractions
+training <- 0.9
+testing <- 0.1
+validation <- 0.1
 
 
 #______________________________________________________________________________#
