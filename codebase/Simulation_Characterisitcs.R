@@ -22,7 +22,10 @@
 
 #______________________________________________________________________________
 ###Set-up working directory###
-setwd("~/GitHub/LDS-Inferences") #Code for personal device
+#setwd("~/GitHub/LDS-Inferences") #Code for personal device
+
+###Set-up Library Paths
+.libPaths("/rigel/cwc/users/yva2000/rpackages/")
 
 ###Load Packages and Dependencies
 library(maps)       
@@ -51,9 +54,9 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
                  header = TRUE) 
 
 ###Subset
-n <- 5*365
-WP <- WP[1:n,]
-ssrd <- ssrd[1:n,]
+#n <- 5*365
+#WP <- WP[1:n,]
+#ssrd <- ssrd[1:n,]
 
 
 #______________________________________________________________________________#
@@ -83,7 +86,7 @@ ynew_results <- NULL
 
 
 #Create the Figure PDF
-pdf("figures/Simulation_Characteristics.pdf")
+pdf("Simulation_Characteristics.pdf")
 
 #______________________________________________________________________________#
 ###Function 1### 
@@ -183,6 +186,8 @@ Get_Total_Energy(Dat = ssrd,
                  knn = solar_knn,
                  land_alc = 4*7*90*90, 
                  max_cap = 24*4*7*90*90*max(rowSums(ssrd))/10^6) #Max Solar
+
+wind_ksts <- wind_knn <- solar_ksts <- solar_knn <- NULL
 
 #______________________________________________________________________________#
 ###ENERGY DROUGHT AND EXCEEDANCE PROBABILITY###
@@ -621,8 +626,20 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
 #______________________________________________________________________________#
 ###Run the function to compute exceedance probabilities###
 
-get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.21, 
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.25, 
              Severities = c(1.25,1.5), Durations = c(20,25,30))
+
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
+             Severities = c(2,5), Durations = c(30,45,60))
+
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.15, 
+             Severities = c(0.75,1), Durations = c(10,15,20))
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.20, 
+             Severities = c(1,1.25), Durations = c(10,20,30))
+
 
 
 #Close the PDF

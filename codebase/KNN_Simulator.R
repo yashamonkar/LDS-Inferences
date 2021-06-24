@@ -19,8 +19,10 @@
 
 #______________________________________________________________________________
 ###Set-up working directory###
-setwd("~/GitHub/LDS-Inferences") #Code for personal device
+#setwd("~/GitHub/LDS-Inferences") #Code for personal device
 
+###Set-up Library Paths
+.libPaths("/rigel/cwc/users/yva2000/rpackages/")
 ###Load Packages and Dependencies
 library(maps)       
 library(dplyr)
@@ -51,9 +53,9 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
 ###Set the KSTS Hyper-Parameters###
 
 ###Subset
-n <- 5*365
-WP <- WP[1:n,]
-ssrd <- ssrd[1:n,]
+#n <- 5*365
+#WP <- WP[1:n,]
+#ssrd <- ssrd[1:n,]
 
 ###Concatenate the fields
 Fld <- as.matrix(cbind(WP,ssrd))
@@ -247,8 +249,8 @@ source('functions/Get_Seasonal_Correlation.R')
 
 
 ###Simulation Hyper-Parameters###
-nneib <- 15
-nsim <- 20
+nneib <- 50
+nsim <- 48
 
 
 
@@ -271,7 +273,7 @@ print(time.taken)
 stopImplicitCluster()
   
 #Saving Raw Simulations
-save(ynew_results, file = paste0("simulations/KNN_Joint_Simulations.RData") )
+save(ynew_results, file = paste0("KNN_Joint_Simulations.RData") )
   
 
   
@@ -279,7 +281,7 @@ save(ynew_results, file = paste0("simulations/KNN_Joint_Simulations.RData") )
 ###Plotting the Simulation Skill Metrics###
 
 #Saving Simulation Skill
-pdf(paste0("figures/KNN_Daily_Joint_",nneib,".pdf"))
+pdf(paste0("KNN_Daily_Joint_",nneib,".pdf"))
   
 
 ###Seperating the Simulations
