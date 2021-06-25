@@ -9,6 +9,18 @@ Most individual sub-routines are stored as functions in /functions.
 The ERA-5 reanalysis data, for the Texas Interconnect region, is not added in this GitHub repository (due to size constraints) but is available at https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5. 
 The original dataset is in  NetCDF (.nc) format and the NetCDF_to_Text.R script in data/rawdata is used to convert it to text (.txt) format. 
 
+The four seperate R scripts in the codebase sub-folder perform the following functions.
+
+1. KSTS_Simulator.R - Generates 48 independent simulations of the data using the novel KSTS simulator which also generates a number of plots analyzing the fit of the simulations to the data.
+
+2. KNN_Simulator.R - Generates 48 independent simulations of the data using the novel KNN simulator. This also generates the same plots as above. 
+
+3. Data_Characteristics.R - Explores the characteristcs of the reanalysis data. 
+
+4. Simulation_Characteriscs.R - Explores the aggregated wind and solar profiles, Energy Droughts and Excedancee Probabilities. 
+
+(Combined, theses four scripts generate all the analysis and plots used/displayed in the draft.)
+
 This work has been submitted to Joule (https://www.cell.com/joule/home) for consideration.
 
 
