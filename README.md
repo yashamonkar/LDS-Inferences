@@ -24,7 +24,7 @@ The four seperate R scripts in the codebase sub-folder perform the following fun
 
 (Combined, theses four scripts generate all the analysis and plots used/displayed in the draft.)
 
-This work has been submitted to Joule (https://www.cell.com/joule/home) for consideration.
+This work has been submitted to Patterns (https://www.cell.com/patterns/home) for consideration.
 
 
 Abstract:- 
