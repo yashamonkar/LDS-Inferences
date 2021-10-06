@@ -35,12 +35,12 @@ grid_locs <- read.csv("data/ERCOT_0_5_deg_lat_lon_index_key.csv",
                       header = TRUE, sep=",")
 
 #Load the Downward Surface Solar Radiation
-ssrd <- read.table("data/ERCOT_Solar_Rad_Daily.txt",  
+ssrd <- read.table("data/ERCOT_Solar_Rad_Daily_Extended.txt",  
                    sep =" ", 
                    header = TRUE) 
 
 #Load the Wind Power Data
-WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",  
+WP <- read.table("data/ERCOT_Wind_Power_Daily_Extended.txt",  
                  sep =" ", 
                  header = TRUE) 
 
@@ -752,22 +752,22 @@ pdf("figures/Data_Characteristics.pdf")
 #Get the Wind Grid-Wise Variation
 Get_Variation(Dat = WP, 
               Grid = grid_locs, 
-              start_date = "01-01-1979",
-              frac = 4*7*90*90/(2*10^6),
+              start_date = "01-01-1950",
+              frac = 1,
               Field_Title = "Wind",
               leg_title = "CF")
 
 #Get the Solar Grid-Wise Variation
 Get_Variation(Dat = ssrd,
               Grid = grid_locs, 
-              start_date = "01-01-1979",
+              start_date = "01-01-1950",
               frac = 1,
               Field_Title = "Solar",
-              leg_title = "W/sq-m")
+              leg_title = "CF")
 
 #Get the Seasonal Wind-Solar Correlation
 get_seasonal_corr(Fld1 = WP, Fld2 = ssrd,
-                  Grid = grid_locs, start_date = "01-01-1979")
+                  Grid = grid_locs, start_date = "01-01-1950")
 
 #Get the ACF and PACF of Wind PC-1
 get_pca_pacf(Fld = WP, Field_Name = "Wind")
