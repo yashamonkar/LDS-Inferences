@@ -38,12 +38,12 @@ grid_locs <- read.csv("data/ERCOT_0_5_deg_lat_lon_index_key.csv",
                       header = TRUE, sep=",")
 
 #Load the Downward Surface Solar Radiation
-ssrd <- read.table("data/ERCOT_Solar_Rad_Daily.txt",  
+ssrd <- read.table("data/ERCOT_Solar_Rad_Daily_Extended.txt",  
                    sep =" ", 
                    header = TRUE) 
 
 #Load the Wind Power Data
-WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",  
+WP <- read.table("data/ERCOT_Wind_Power_Daily_Extended.txt",  
                  sep =" ", 
                  header = TRUE) 
 
@@ -269,7 +269,7 @@ source('functions/Get_Seasonal_Correlation.R')
 
 
 ###Simulation Hyper-Parameters###
-nneib <- 50
+nneib <- 65
 nsim <- 48
 
 
@@ -283,7 +283,7 @@ start.time <- Sys.time()
 ynew_results <- foreach(m = 1:nsim, .verbose = TRUE) %dopar% {
     ksts(Fld,ngrids, N_valid,
          nneib,w,
-         start_date = "01-01-1970",day_mv = 30,
+         start_date = "01-01-1950",day_mv = 30,
          max_embd, sel_lags, n_lags)
   }
 end.time <- Sys.time()
@@ -320,7 +320,7 @@ Get_Simulation_Skill(True_Data = fld,
 Get_Annual_Cycle(True_Data = fld, Field_Name = Field,
                  Simulations = wind_sims,
                  Resolution = "daily",
-                 Start_Date = "01-01-1979")
+                 Start_Date = "01-01-1950")
   
 get_pca_plot(X = fld, 
                Grid = grid_locs, 
@@ -343,7 +343,7 @@ Get_Simulation_Skill(True_Data = fld,
 Get_Annual_Cycle(True_Data = fld, Field_Name = Field,
                  Simulations = solar_sims,
                  Resolution = "daily",
-                 Start_Date = "01-01-1970")
+                 Start_Date = "01-01-1950")
   
 get_pca_plot(X = fld, 
                Grid = grid_locs, 
@@ -368,7 +368,7 @@ Get_Seasonal_Correlation(Fld1 = Fld[,1:n_site], #Wind
                        Fld1_Sims = wind_sims,
                        Fld2_Sims = solar_sims,
                        Grid = grid_locs,
-                       start_date = "01-01-1979",
+                       start_date = "01-01-1950",
                        col_hx = "#af8dc3")
 
   
