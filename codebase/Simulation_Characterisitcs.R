@@ -22,10 +22,10 @@
 
 #______________________________________________________________________________
 ###Set-up working directory###
-#setwd("~/GitHub/LDS-Inferences") #Code for personal device
+setwd("~/GitHub/LDS-Inferences") #Code for personal device
 
 ###Set-up Library Paths
-.libPaths("/rigel/cwc/users/yva2000/rpackages/")
+#.libPaths("/rigel/cwc/users/yva2000/rpackages/")
 
 ###Load Packages and Dependencies
 library(maps)       
@@ -65,7 +65,7 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
 #KSTS
 wind_ksts <- solar_ksts <- list()
 load("simulations/KSTS_Joint_Simulations.RData")
-nl <- length(ynew_results)
+nl <- 12 #length(ynew_results)
 for(i in 1:nl){
   wind_ksts[[i]] <- ynew_results[[i]]$WPnew
   solar_ksts[[i]] <- ynew_results[[i]]$SSnew
@@ -76,7 +76,7 @@ ynew_results <- NULL
 #Knn
 wind_knn <- solar_knn <- list()
 load("simulations/KNN_Joint_Simulations.RData")
-nl <- length(ynew_results)
+nl <- 12 #length(ynew_results)
 for(i in 1:nl){
   wind_knn[[i]] <- ynew_results[[i]]$WPnew
   solar_knn[[i]] <- ynew_results[[i]]$SSnew
@@ -96,21 +96,18 @@ pdf("Simulation_Characteristics.pdf")
 #   2. Field Name (Field)
 #   3. KSTS Simulations (ksts)
 #   4. KNN Simulations (knn)
-#   5. Land Allocation (land_alc)
-#   6. Max Capacity (max_cap)
+#   5. Max Capacity (max_cap)
 ###Output
 #   1. All DOYs in the moving window
 
-Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc, max_cap){
+Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc){
   
   #Hyper-Parameters
   nsim_knn <- length(knn)
   nsim_ksts <- length(ksts)
   
   #COnvert W/sq-m to MWhr
-  t_fac <- 24*land_alc/(10^6)   #hrs*sq-m/M
-  tx <- rowSums(Dat)*t_fac      #MWhr
-  tx <- tx/max_cap              #Division by Max-Capacity
+  tx <- rowSums(Dat)/ncol(Dat)      #Add-Up the capacity factors
   
   #Compute the KDE on the Reanalysis Data
   og_pdf <- density(tx, from = 0, to = 1)
@@ -120,7 +117,7 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc, max_cap){
   for(j in 1:nsim_ksts){
     #Computing each CDF
     sim <- as.data.frame(ksts[[j]])
-    sim <- rowSums(sim)*t_fac/max_cap
+    sim <- rowSums(sim)/ncol(Dat)
     pdf_sim <- density(sim, from = 0, to = 1)
     sim_ksts[,j] <- pdf_sim$y
   }
@@ -134,7 +131,7 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc, max_cap){
   for(j in 1:nsim_knn){
     #Computing each CDF
     sim <- as.data.frame(knn[[j]])
-    sim <- rowSums(sim)*t_fac/max_cap
+    sim <- rowSums(sim)/ncol(Dat)
     pdf_sim <- density(sim, from = 0, to = 1)
     sim_knn[,j] <- pdf_sim$y
   }
@@ -176,16 +173,12 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc, max_cap){
 Get_Total_Energy(Dat = WP, 
                  Field = "Wind",
                  ksts = wind_ksts,
-                 knn = wind_knn,
-                 land_alc = 4*7*90*90, 
-                 max_cap = 2*24*216) #Installed Turbine Capacity
+                 knn = wind_knn) #Installed Turbine Capacity
 
 Get_Total_Energy(Dat = ssrd, 
                  Field = "Solar",
                  ksts = solar_ksts,
-                 knn = solar_knn,
-                 land_alc = 4*7*90*90, 
-                 max_cap = 24*4*7*90*90*max(rowSums(ssrd))/10^6) #Max Solar
+                 knn = solar_knn) #Max Solar
 
 wind_ksts <- wind_knn <- solar_ksts <- solar_knn <- NULL
 
