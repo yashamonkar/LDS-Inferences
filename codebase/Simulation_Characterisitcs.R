@@ -22,10 +22,10 @@
 
 #______________________________________________________________________________
 ###Set-up working directory###
-setwd("~/GitHub/LDS-Inferences") #Code for personal device
+#setwd("~/GitHub/LDS-Inferences") #Code for personal device
 
 ###Set-up Library Paths
-#.libPaths("/rigel/cwc/users/yva2000/rpackages/")
+.libPaths("/rigel/cwc/users/yva2000/rpackages/")
 
 ###Load Packages and Dependencies
 library(maps)       
@@ -65,7 +65,7 @@ WP <- read.table("data/ERCOT_Wind_Power_Daily.txt",
 #KSTS
 wind_ksts <- solar_ksts <- list()
 load("simulations/KSTS_Joint_Simulations.RData")
-nl <- 12 #length(ynew_results)
+nl <- length(ynew_results)
 for(i in 1:nl){
   wind_ksts[[i]] <- ynew_results[[i]]$WPnew
   solar_ksts[[i]] <- ynew_results[[i]]$SSnew
@@ -76,7 +76,7 @@ ynew_results <- NULL
 #Knn
 wind_knn <- solar_knn <- list()
 load("simulations/KNN_Joint_Simulations.RData")
-nl <- 12 #length(ynew_results)
+nl <- length(ynew_results)
 for(i in 1:nl){
   wind_knn[[i]] <- ynew_results[[i]]$WPnew
   solar_knn[[i]] <- ynew_results[[i]]$SSnew
@@ -180,45 +180,10 @@ Get_Total_Energy(Dat = ssrd,
                  ksts = solar_ksts,
                  knn = solar_knn) #Max Solar
 
-wind_ksts <- wind_knn <- solar_ksts <- solar_knn <- NULL
-
-#______________________________________________________________________________#
-###ENERGY DROUGHT AND EXCEEDANCE PROBABILITY###
-
-#This section requires all the sites to be normalized first.
-#Therefore the earlier loaded simulations are discarded and re-loaded again.
 solar_knn <- wind_knn <- NULL
 solar_ksts <- wind_ksts <- NULL
 
-###Read the simulations
-#KSTS
-comb_ksts <- list()
-load("simulations/KSTS_Joint_Simulations.RData")
-nl <-  length(ynew_results)
-for(i in 1:nl){
-  comb_ksts[[i]] <- cbind(ynew_results[[i]]$WPnew, ynew_results[[i]]$SSnew)
-  comb_ksts[[i]] <- apply(comb_ksts[[i]], 2, function(x){x/max(x)})
-  ynew_results[[i]] <- 1
-  
-}
-ynew_results <- NULL
 
-#KNN
-comb_knn <- list()
-load("simulations/KNN_Joint_Simulations.RData")
-nl <- length(ynew_results)
-for(i in 1:nl){
-  comb_knn[[i]] <- cbind(ynew_results[[i]]$WPnew, ynew_results[[i]]$SSnew)
-  comb_knn[[i]] <- apply(comb_knn[[i]], 2, function(x){x/max(x)})
-  ynew_results[[i]] <- 1
-  
-}
-ynew_results <- NULL
-
-
-#Data Normalization
-Fld <- as.matrix(cbind(WP,ssrd))
-Fld <- apply(Fld, 2, function(x){x/max(x)})
 
 
 
@@ -232,6 +197,7 @@ Fld <- apply(Fld, 2, function(x){x/max(x)})
 #   4. KNN Simulations (Sims_KNN)
 #   5. Threshold (thresh)
 #   6. Start_Date
+#   7. Field_type (Joint, Wind or Solar)
 
 ###Output
 #   1.  Single Severity vs Duration plots with boxplots for marginals.
@@ -241,7 +207,8 @@ get_energy_droughts <- function(True_Data,
                                 Sims_KSTS,
                                 Sims_KNN,
                                 thresh,
-                                Start_Date)
+                                Start_Date,
+                                Field_type)
 {
   #Source the function.
   source("functions/Get_Severity_Duration.R")
@@ -297,7 +264,7 @@ get_energy_droughts <- function(True_Data,
   
   p_main <- ggplot(Sev_Dur) + 
     geom_point(aes(log10(Duration), log10(Severity), color = Type), alpha = 0.75) +
-    ggtitle(paste0("Duration vs Severity \n Threshold - ", thresh*100,"th Percentile")) + 
+    ggtitle(paste0("Duration vs Severity - ", Field_type, " \n Threshold - ", thresh*100,"th Percentile")) + 
     scale_x_continuous(name = "Duration (Days)", labels = scales::math_format(10^.x)) +
     scale_y_continuous(name = "Severity (Multiples of Mean Production)", labels = scales::math_format(10^.x)) +
     theme_bw() +
@@ -336,78 +303,6 @@ get_energy_droughts <- function(True_Data,
   
 }
 
-
-#______________________________________________________________________________#
-###Running the Energy Droughts Plotting Function at multiple thresholds###
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.15,
-                    Start_Date = "01-01-1979")
-
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.20,
-                    Start_Date = "01-01-1979")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.25,
-                    Start_Date = "01-01-1979")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.30,
-                    Start_Date = "01-01-1979")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.35,
-                    Start_Date = "01-01-1979")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.40,
-                    Start_Date = "01-01-1979")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.45,
-                    Start_Date = "01-01-1979")
-
-
-
-#______________________________________________________________________________#
-###Function 3###
-#Objective - To compute the Annual Exceedance given data, simulations
-#             severity, duration and thresholds.
-###Inputs
-#   1. Original Data (True_Data)
-#   2. Field Name (Field_Name)
-#   3. KSTS Simulations (Sims_KSTS)
-#   4. KNN Simulations (Sims_KNN)
-#   5. Threshold (thresh)
-#   6. Start_Date
-
-###Output
-#
-
-
 #______________________________________________________________________________#
 ###Function 3
 ###Function to fit a log-fit to the output of severity duration.
@@ -417,16 +312,18 @@ get_energy_droughts(True_Data = Fld,
 #3. Threshold Percentile (Thresh)
 #4. Desired Severity [2] e.g. c(1.25,1.5)
 #5. Desired Duration [3] e.g. c(20,25,30)
+#6. Field_type (Joint, Wind or Solar)
 
 ###Outputs
 #1. Panel Plot
 
 
-get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
+get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations, 
+                         Field_type){
   
   #Hyper-Parameters
   thresh = Thresh
-  st_date = "01-01-1979"
+  st_date = "01-01-1950"
   mean_daily <- mean(rowSums(Dat))
   nl <- length(comb_ksts)
   
@@ -498,7 +395,7 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
     data_pexc[[i]] <- 100*get_annual_prob(ED = Data_SD, 
                                           Dur = Sev_Dur$Duration[i],
                                           Sev = Sev_Dur$Severity[i], 
-                                          MD = mean_daily, N_yr = 40)
+                                          MD = mean_daily, N_yr = 71)
   }
   data_pexc <- unlist(data_pexc)
   
@@ -555,7 +452,7 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
       temp_pexc[[i]] <- 100*get_annual_prob(ED = KSTS_SD, 
                                             Dur = Sev_Dur$Duration[i],
                                             Sev = Sev_Dur$Severity[i], 
-                                            MD = mean_daily, N_yr = 40)
+                                            MD = mean_daily, N_yr = 71)
     }
     
     sim_pexc[[m]] <- unlist(temp_pexc)
@@ -599,7 +496,8 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
   
   p <- ggplot(sims_plot, aes(x=Duration, y=Exceedance)) + 
     geom_boxplot() +
-    ggtitle(paste0("Energy Droughts & Annual Exceedances \n Threshold - ", thresh*100,"th Percentile")) +
+    ggtitle(paste0("Energy Droughts & Annual Exceedances \n Threshold - ", thresh*100,
+                   "th Percentile \n ", Field_type)) +
     ylab("Annual Exceedance Probabilities (%)") +
     xlab("Duration (Days)") +
     theme_bw() +
@@ -617,21 +515,292 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations){
 
 
 #______________________________________________________________________________#
+#______________________________________________________________________________#
+#______________________________________________________________________________#
+###ENERGY DROUGHT AND EXCEEDANCE PROBABILITY###
+#Joint Wind and Solar
+
+#This section requires all the sites to be normalized first.
+
+###Read the simulations
+#KSTS
+comb_ksts <- list()
+load("simulations/KSTS_Joint_Simulations.RData")
+nl <-  length(ynew_results)
+for(i in 1:nl){
+  comb_ksts[[i]] <- cbind(ynew_results[[i]]$WPnew, ynew_results[[i]]$SSnew)
+  comb_ksts[[i]] <- apply(comb_ksts[[i]], 2, function(x){x/max(x)})
+  ynew_results[[i]] <- 1
+  
+}
+ynew_results <- NULL
+
+#KNN
+comb_knn <- list()
+load("simulations/KNN_Joint_Simulations.RData")
+nl <- length(ynew_results)
+for(i in 1:nl){
+  comb_knn[[i]] <- cbind(ynew_results[[i]]$WPnew, ynew_results[[i]]$SSnew)
+  comb_knn[[i]] <- apply(comb_knn[[i]], 2, function(x){x/max(x)})
+  ynew_results[[i]] <- 1
+  
+}
+ynew_results <- NULL
+
+
+#Data Normalization
+Fld <- as.matrix(cbind(WP,ssrd))
+Fld <- apply(Fld, 2, function(x){x/max(x)})
+
+#------------------------------------------------------------------------------#
+###Running the Energy Droughts Plotting Function at multiple thresholds###
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.15,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.20,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.25,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.30,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.35,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.40,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.45,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint Fields")
+
+#------------------------------------------------------------------------------#
 ###Run the function to compute exceedance probabilities###
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.25, 
-             Severities = c(1.25,1.5), Durations = c(20,25,30))
+             Severities = c(1.25,1.5), Durations = c(20,25,30),
+             Field_type = "Joint Fields")
 
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
-             Severities = c(2,5), Durations = c(30,45,60))
+             Severities = c(2,5), Durations = c(30,45,60),
+             Field_type = "Joint Fields")
 
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.15, 
-             Severities = c(0.75,1), Durations = c(10,15,20))
+             Severities = c(0.75,1), Durations = c(10,15,20),
+             Field_type = "Joint Fields")
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.20, 
-             Severities = c(1,1.25), Durations = c(10,20,30))
+             Severities = c(1,1.25), Durations = c(10,20,30),
+             Field_type = "Joint Fields")
+
+comb_ksts <- comb_knn <- Fld <- NULL
+
+
+
+
+#______________________________________________________________________________#
+#______________________________________________________________________________#
+#______________________________________________________________________________#
+###Just Wind
+
+###Read the Wind simulations
+#KSTS
+comb_ksts <- list()
+load("simulations/KSTS_Joint_Simulations.RData")
+nl <-  length(ynew_results)
+for(i in 1:nl){
+  comb_ksts[[i]] <- ynew_results[[i]]$WPnew
+  ynew_results[[i]] <- 1
+  
+}
+ynew_results <- NULL
+
+#KNN
+comb_knn <- list()
+load("simulations/KNN_Joint_Simulations.RData")
+nl <- length(ynew_results)
+for(i in 1:nl){
+  comb_knn[[i]] <- ynew_results[[i]]$WPnew
+  ynew_results[[i]] <- 1
+  
+}
+ynew_results <- NULL
+
+#Data Normalization
+Fld <- as.matrix(WP)
+
+#------------------------------------------------------------------------------#
+###Running the Energy Droughts Plotting Function at multiple thresholds###
+
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.20,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Wind")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.25,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Joint")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.30,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Wind")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.35,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Wind")
+
+
+#------------------------------------------------------------------------------#
+###Run the function to compute exceedance probabilities###
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.25, 
+             Severities = c(1.25,1.5), Durations = c(20,25,30),
+             Field_type = "Wind")
+
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
+             Severities = c(2,5), Durations = c(30,45,60),
+             Field_type = "Wind")
+
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.15, 
+             Severities = c(0.75,1), Durations = c(10,15,20),
+             Field_type = "Wind")
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.20, 
+             Severities = c(1,1.25), Durations = c(10,20,30),
+             Field_type = "Wind")
+
+comb_ksts <- comb_knn <- Fld <- NULL
+
+
+
+#______________________________________________________________________________#
+#______________________________________________________________________________#
+#______________________________________________________________________________#
+###Just Solar
+
+###Read the Wind simulations
+#KSTS
+comb_ksts <- list()
+load("simulations/KSTS_Joint_Simulations.RData")
+nl <-  length(ynew_results)
+for(i in 1:nl){
+  comb_ksts[[i]] <- ynew_results[[i]]$SSnew
+  ynew_results[[i]] <- 1
+  
+}
+ynew_results <- NULL
+
+#KNN
+comb_knn <- list()
+load("simulations/KNN_Joint_Simulations.RData")
+nl <- length(ynew_results)
+for(i in 1:nl){
+  comb_knn[[i]] <- ynew_results[[i]]$SSnew
+  ynew_results[[i]] <- 1
+  
+}
+ynew_results <- NULL
+
+#Data Normalization
+Fld <- as.matrix(ssrd)
+
+#------------------------------------------------------------------------------#
+###Running the Energy Droughts Plotting Function at multiple thresholds###
+
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.25,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Solar")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.30,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Solar")
+
+get_energy_droughts(True_Data = Fld,
+                    Field_Name = " ",
+                    Sims_KSTS = comb_ksts,
+                    Sims_KNN = comb_knn,
+                    thresh = 0.35,
+                    Start_Date = "01-01-1950",
+                    Field_type = "Solar")
+
+
+#------------------------------------------------------------------------------#
+###Run the function to compute exceedance probabilities###
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
+             Severities = c(2,5), Durations = c(30,45,60),
+             Field_type = "Solar")
+
+comb_ksts <- comb_knn <- Fld <- NULL
+
+
 
 
 
