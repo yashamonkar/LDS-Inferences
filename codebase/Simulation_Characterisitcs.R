@@ -555,22 +555,7 @@ Fld <- apply(Fld, 2, function(x){x/max(x)})
 #------------------------------------------------------------------------------#
 ###Running the Energy Droughts Plotting Function at multiple thresholds###
 
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.15,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Joint Fields")
 
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.20,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Joint Fields")
 
 get_energy_droughts(True_Data = Fld,
                     Field_Name = " ",
@@ -588,13 +573,6 @@ get_energy_droughts(True_Data = Fld,
                     Start_Date = "01-01-1950",
                     Field_type = "Joint Fields")
 
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.35,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Joint Fields")
 
 get_energy_droughts(True_Data = Fld,
                     Field_Name = " ",
@@ -681,30 +659,6 @@ get_energy_droughts(True_Data = Fld,
                     Start_Date = "01-01-1950",
                     Field_type = "Wind")
 
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.25,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Joint")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.30,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Wind")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.35,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Wind")
-
 
 #------------------------------------------------------------------------------#
 ###Run the function to compute exceedance probabilities###
@@ -774,22 +728,6 @@ get_energy_droughts(True_Data = Fld,
                     Start_Date = "01-01-1950",
                     Field_type = "Solar")
 
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.30,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Solar")
-
-get_energy_droughts(True_Data = Fld,
-                    Field_Name = " ",
-                    Sims_KSTS = comb_ksts,
-                    Sims_KNN = comb_knn,
-                    thresh = 0.35,
-                    Start_Date = "01-01-1950",
-                    Field_type = "Solar")
-
 
 #------------------------------------------------------------------------------#
 ###Run the function to compute exceedance probabilities###
@@ -797,6 +735,11 @@ get_energy_droughts(True_Data = Fld,
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
              Severities = c(2,5), Durations = c(30,45,60),
              Field_type = "Solar")
+
+get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.20, 
+             Severities = c(2,5), Durations = c(30,45,60),
+             Field_type = "Solar")
+
 
 comb_ksts <- comb_knn <- Fld <- NULL
 
