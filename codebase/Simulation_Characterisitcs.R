@@ -143,7 +143,7 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc){
   #Plotting the results
   par(mfrow=c(1,1), mar = c(6,6,4,1))
   plot(og_pdf$x, og_pdf$y, type='l',col='red',
-       lwd = 3, main = paste0("Daily Generation Potential - ", Field), 
+       lwd = 1.5, main = paste0("Daily Generation Potential - ", Field), 
        xlab = "Fraction of Maximum Production", ylab = "Density - f(x) ",
        ylim = c(0, max(upper_knn)),
        xlim = c(0,1),
@@ -156,7 +156,7 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc){
   polygon(c(og_pdf$x,rev(og_pdf$x)),c(lower_knn,rev(upper_knn)),col="#7fbf7b")
   
   #Data-Line
-  lines(og_pdf$x, og_pdf$y, col = "black", lwd = 3)
+  lines(og_pdf$x, og_pdf$y, col = "black", lwd = 1.5)
   
   legend('topleft', legend = c("Data", "KSTS", "KNN"),
          col = c('black',"#af8dc3", "#7fbf7b"), 
@@ -507,7 +507,7 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations,
           strip.text = element_text(size=20))
   
   p <- p + facet_grid(Severity ~ ., scale = "free")
-  p <- p + geom_point(data_plot, mapping = aes(x=Duration, y=Exceedance), color = 'red', size = 2)
+  p <- p + geom_point(data_plot, mapping = aes(x=Duration, y=Exceedance), color = 'red', size = 3)
   print(p)
   
   
@@ -724,7 +724,7 @@ get_energy_droughts(True_Data = Fld,
                     Field_Name = " ",
                     Sims_KSTS = comb_ksts,
                     Sims_KNN = comb_knn,
-                    thresh = 0.25,
+                    thresh = 0.20,
                     Start_Date = "01-01-1950",
                     Field_type = "Solar")
 
