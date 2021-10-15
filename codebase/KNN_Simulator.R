@@ -39,12 +39,12 @@ grid_locs <- read.csv("data/ERCOT_0_5_deg_lat_lon_index_key.csv",
                       header = TRUE, sep=",")
 
 #Load the Downward Surface Solar Radiation
-ssrd <- read.table("data/ERCOT_Solar_Rad_Daily_Extended.txt",  
+ssrd <- read.table("data/ERCOT_Solar_CF_Daily.txt",  
                    sep =" ", 
                    header = TRUE) 
 
 #Load the Wind Power Data
-WP <- read.table("data/ERCOT_Wind_Power_Daily_Extended.txt",  
+WP <- read.table("data/ERCOT_Wind_CF_Daily.txt",  
                  sep =" ", 
                  header = TRUE) 
 
