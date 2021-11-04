@@ -96,11 +96,11 @@ pdf("Simulation_Characteristics.pdf")
 #   2. Field Name (Field)
 #   3. KSTS Simulations (ksts)
 #   4. KNN Simulations (knn)
-#   5. Max Capacity (max_cap)
+#   5. Max Capacity (max_cap) (Visual Parameter Limiting the x-axis)
 ###Output
 #   1. All DOYs in the moving window
 
-Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc){
+Get_Total_Energy <- function(Dat, Field, ksts, knn, max_cap){
   
   #Hyper-Parameters
   nsim_knn <- length(knn)
@@ -146,14 +146,14 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc){
        lwd = 1.5, main = paste0("Daily Generation Potential - ", Field), 
        xlab = "Fraction of Maximum Production", ylab = "Density - f(x) ",
        ylim = c(0, max(upper_knn)),
-       xlim = c(0,1),
+       xlim = c(0,max_cap),
        cex.lab = 1.5,
        cex.main = 1.75)
   #KSTS
-  polygon(c(og_pdf$x,rev(og_pdf$x)),c(lower_ksts,rev(upper_ksts)),col="#af8dc3")
+  polygon(c(og_pdf$x,rev(og_pdf$x)),c(lower_ksts,rev(upper_ksts)),col="#af8dc3", border = "#af8dc3")
   
   #KNN
-  polygon(c(og_pdf$x,rev(og_pdf$x)),c(lower_knn,rev(upper_knn)),col="#7fbf7b")
+  polygon(c(og_pdf$x,rev(og_pdf$x)),c(lower_knn,rev(upper_knn)),col="#7fbf7b", border = "#7fbf7b")
   
   #Data-Line
   lines(og_pdf$x, og_pdf$y, col = "black", lwd = 1.5)
@@ -173,12 +173,14 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, land_alc){
 Get_Total_Energy(Dat = WP, 
                  Field = "Wind",
                  ksts = wind_ksts,
-                 knn = wind_knn) #Installed Turbine Capacity
+                 knn = wind_knn,
+                 max_cap = 1)
 
 Get_Total_Energy(Dat = ssrd, 
                  Field = "Solar",
                  ksts = solar_ksts,
-                 knn = solar_knn) #Max Solar
+                 knn = solar_knn,
+                 max_cap = 0.4) 
 
 solar_knn <- wind_knn <- NULL
 solar_ksts <- wind_ksts <- NULL
@@ -325,7 +327,7 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations,
   thresh = Thresh
   st_date = "01-01-1950"
   mean_daily <- mean(rowSums(Dat))
-  nl <- length(comb_ksts)
+  nl <- length(Sims)
   
   #Set-up Grid of Values
   Dur = Durations
@@ -338,11 +340,11 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations,
   #---------------------------------------------------------------------------#
   ###Function to fit a log-fit to the output of severity duration.
   ###Inputs of Function
-  #1. Severity-Duration for all Data.
-  #2. Desired Duration
-  #3. Desired Severity
-  #4. Mean Daily Value to facilitate comparision
-  #5. Number of Years
+  #1. Severity-Duration for all Data. (ED)
+  #2. Desired Duration (Dur)
+  #3. Desired Severity (Sev)
+  #4. Mean Daily Value to facilitate comparision (MD)
+  #5. Number of Years (N_yr)
   
   ###Output 
   #1. Annual Probability
@@ -507,7 +509,7 @@ get_aep_plot <- function(Dat, Sims, Thresh, Severities, Durations,
           strip.text = element_text(size=20))
   
   p <- p + facet_grid(Severity ~ ., scale = "free")
-  p <- p + geom_point(data_plot, mapping = aes(x=Duration, y=Exceedance), color = 'red', size = 3)
+  p <- p + geom_point(data_plot, mapping = aes(x=Duration, y=Exceedance), color = 'red', size = 4)
   print(p)
   
   
@@ -663,19 +665,19 @@ get_energy_droughts(True_Data = Fld,
 #------------------------------------------------------------------------------#
 ###Run the function to compute exceedance probabilities###
 
-get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.25, 
-             Severities = c(1.25,1.5), Durations = c(20,25,30),
-             Field_type = "Wind")
+#get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.25, 
+#             Severities = c(1.25,1.5), Durations = c(20,25,30),
+#             Field_type = "Wind")
 
 
-get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
-             Severities = c(2,5), Durations = c(30,45,60),
-             Field_type = "Wind")
+#get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
+#             Severities = c(2,5), Durations = c(30,45,60),
+#             Field_type = "Wind")
 
 
-get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.15, 
-             Severities = c(0.75,1), Durations = c(10,15,20),
-             Field_type = "Wind")
+#get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.15, 
+#             Severities = c(0.75,1), Durations = c(10,15,20),
+#             Field_type = "Wind")
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.20, 
              Severities = c(1,1.25), Durations = c(10,20,30),
@@ -732,9 +734,9 @@ get_energy_droughts(True_Data = Fld,
 #------------------------------------------------------------------------------#
 ###Run the function to compute exceedance probabilities###
 
-get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
-             Severities = c(2,5), Durations = c(30,45,60),
-             Field_type = "Solar")
+#get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.30, 
+#             Severities = c(2,5), Durations = c(30,45,60),
+#             Field_type = "Solar")
 
 get_aep_plot(Dat = Fld, Sims = comb_ksts, Thresh = 0.20, 
              Severities = c(2,5), Durations = c(30,45,60),
