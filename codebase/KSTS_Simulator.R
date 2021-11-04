@@ -108,8 +108,8 @@ close_ind <- function(curr,max,window){
 ###Function 2 
 #Objective - Compute the K-Nearest Neighbors for each site
 ###Inputs
-#   1. Current Feature Vector (x)
-#   2. All historic Feature Vectors (xtest)
+#   1. All the feature vectors (x)
+#   2. Current feature vector (xtest)
 #   3. Number of Neighbors (nneib)
 #   4. Scaling Weights (weights)
 ###Outputs
