@@ -497,8 +497,10 @@ Get_Variation <- function(Dat, Grid, start_date, frac, Field_Title, leg_title){
   
   #______________________________________________________________________________#
   
-  print(ggarrange(p11, p21, p31, p41, nrow = 2, ncol = 2, common.legend = TRUE, legend = "right"))
-  print(ggarrange(p12, p22, p32, p42, nrow = 2, ncol = 2, common.legend = TRUE, legend = "right"))
+  print(ggarrange(p11, p21, p31, p41, nrow = 2, ncol = 2, common.legend = TRUE, legend = "right",
+                  labels = c("a", "b", "c", "d")))
+  print(ggarrange(p12, p22, p32, p42, nrow = 2, ncol = 2, common.legend = TRUE, legend = "right",
+                  labels = c("a", "b", "c", "d")))
   
 }
 
