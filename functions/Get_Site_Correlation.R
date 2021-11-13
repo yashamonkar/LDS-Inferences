@@ -59,7 +59,7 @@ Get_Site_Correlation <- function(Fld1,Fld2, # Data
   #Computing the Quantiles
   for(i in 1:ncol(Fld1)){
     temp <- list()
-    for(j in 1:nsim){
+    for(j in 1:sims){
       temp[j] <- M_sim[[j]][i]
     }
     temp <- unlist(temp)
