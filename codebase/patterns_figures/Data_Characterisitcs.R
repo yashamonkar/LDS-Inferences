@@ -776,7 +776,7 @@ get_seasonal_corr <- function(Fld1, Fld2, Grid, start_date){
   print(ggarrange(p1, p2, p3, p4, 
                   nrow = 2, ncol = 2, 
                   common.legend = TRUE, legend = "right",
-                  labels = c("a", "b", "c", "d")))
+                  labels = c("A", "B", "C", "D")))
   
 }
 
@@ -807,11 +807,11 @@ p_solar <- Get_Variation(Dat = ssrd,
 
 ggarrange(p_wind$p1, p_wind$p2, p_solar$p1, p_solar$p2,
           nrow = 2, ncol = 2,
-          labels = c("a", "b", "c", "d"))
+          labels = c("A", "B", "C", "D"))
 
 ggarrange(p_wind$p3, p_wind$p4, p_solar$p3, p_solar$p4,
           nrow = 2, ncol = 2,
-          labels = c("a", "b", "c", "d"))
+          labels = c("A", "B", "C", "D"))
 
 
 #------------------------------------------------------------------------------#
@@ -821,7 +821,7 @@ p_solar <- get_pca_pacf(Fld = ssrd, Field_Name = "Solar")
 
 ggarrange(p_wind$p1, p_wind$p2, p_solar$p1, p_solar$p2,
           nrow = 2, ncol = 2,
-          labels = c("a", "b", "c", "d"))
+          labels = c("A", "B", "C", "D"))
 
 
 

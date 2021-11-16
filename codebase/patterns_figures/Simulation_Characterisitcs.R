@@ -157,7 +157,7 @@ Get_Total_Energy <- function(Dat, Field, ksts, knn, max_cap){
   #Plotting the results
   p <- ggplot(Plt_Data, aes(X)) +
     geom_ribbon(aes(ymin = lower, ymax =  upper, fill = Type), color ='black', alpha = 0.85) +
-    geom_line(OG_PDF, mapping = aes(x = X, y = Y), color = 'red', size = 1.15) +
+    geom_line(OG_PDF, mapping = aes(x = X, y = Y), color = 'red', size = 0.9) +
     scale_x_continuous(name = "Fraction of Max Production", limits = c(0, max_cap)) +
     scale_y_continuous(name = "Density - f(x)") +
     labs(title = paste0("  Daily Generation Potential - ", Field)) + 
