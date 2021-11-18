@@ -80,7 +80,7 @@ for(i in 1:nl){
 ynew_results <- NULL
 
 
-pdf("Simulation_Checks.pdf")
+pdf("figures/patterns_figures/Simulation_Checks.pdf")
 
 
 #______________________________________________________________________________#
@@ -356,7 +356,7 @@ plot_grid(wind$p_lower,wind$p_upper,
 ### - Site Correlaion
 
 #Load the function
-source("plotting_functions/Get_Site_Correlation.R")
+source("functions/patterns_plotting_functions/Get_Site_Correlation.R")
 
 Get_Site_Correlation(Fld1 = WP,Fld2 = ssrd,
                      Fld1_Sims = wind_ksts,
@@ -558,7 +558,7 @@ plot_grid(p1,p3,p2,p4,
 #Monthly Boxplots
 
 #Load the function
-source("plotting_functions/Get_Annual_Cycle.R")
+source("functions/patterns_plotting_functions/Get_Annual_Cycle.R")
 
 p1 <- Get_Annual_Cycle(True_Data = WP, 
                  Simulations = wind_ksts,
@@ -696,7 +696,7 @@ plot_grid(p1,p2,p3,p4,
 #Seasonal Correlations
 
 #Load the function
-source("plotting_functions/Get_Seasonal_Correlation.R")
+source("functions/patterns_plotting_functions/Get_Seasonal_Correlation.R")
 
 
 Get_Seasonal_Correlation(Fld1 = WP,Fld2= ssrd,

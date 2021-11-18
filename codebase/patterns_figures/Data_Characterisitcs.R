@@ -785,7 +785,7 @@ get_seasonal_corr <- function(Fld1, Fld2, Grid, start_date){
 
 
 
-pdf("Data_Characteristics.pdf")
+pdf("figures/patterns_figures/Data_Characteristics.pdf", compress = TRUE)
 
 #------------------------------------------------------------------------------#
 ###Get the Wind Grid-Wise Variation Plots

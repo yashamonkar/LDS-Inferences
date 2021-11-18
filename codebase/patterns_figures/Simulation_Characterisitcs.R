@@ -87,7 +87,7 @@ ynew_results <- NULL
 
 
 #Create the Figure PDF
-pdf("Simulation_Characteristics.pdf")
+pdf("figures/patterns_figures/Simulation_Characteristics.pdf")
 
 #______________________________________________________________________________#
 ###Function 1### 

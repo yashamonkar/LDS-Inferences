@@ -129,14 +129,14 @@ Get_Variation <- function(Dat, Grid, start_date, frac, Field_Title, leg_title){
   
   #Mean
   mean_site <- c(unlist(mean_cl), unlist(mean_djf), unlist(mean_mam),
-                     unlist(mean_jja), unlist(mean_son))
+                 unlist(mean_jja), unlist(mean_son))
   min_mean <- min(mean_site)
   max_mean <- max(mean_site)
   mid_mean <- (max_mean + min_mean)/2
   
   #Variation
   var_site <- c(unlist(var_cl), unlist(var_djf), unlist(var_mam),
-                 unlist(var_jja), unlist(var_son))
+                unlist(var_jja), unlist(var_son))
   min_var <- min(var_site)
   max_var <- max(var_site)
   mid_var <- (max_var + min_var)/2
@@ -160,7 +160,7 @@ Get_Variation <- function(Dat, Grid, start_date, frac, Field_Title, leg_title){
   
   world <- map_data("world")
   us <- map_data("state")
-
+  
   p1 <- ggplot() +
     geom_map(data=world, map=world,
              aes(x=long, y=lat, map_id=region),
@@ -206,7 +206,7 @@ Get_Variation <- function(Dat, Grid, start_date, frac, Field_Title, leg_title){
           axis.ticks = element_blank(),
           plot.title = element_text(size=20),
           legend.key.height  = unit(2.5, "cm"))
-
+  
   
   grid.arrange(p1, nrow = 1)
   grid.arrange(p2, nrow = 1)
