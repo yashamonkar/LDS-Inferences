@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# KSTS Prediction File
+codebase/KSTS_Predictor.R
+
 # C extensions
 *.so
 
