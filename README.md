@@ -11,7 +11,7 @@ Most individual sub-routines are stored as functions in /functions.
 The ERA-5 reanalysis data, for the Texas Interconnect region, is not added in this GitHub repository (due to size constraints) but is available at https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5. 
 The original dataset is in  NetCDF (.nc) format and the NetCDF_to_Text.R script in data/rawdata is used to convert it to text (.txt) format. 
 The entire datasets used and simulations generated are stored here - (http://doi.org/10.5281/zenodo.5116072).
-This is a version of the GitHub repository with data and simulations. Added separately due to the size constraints in GitHub
+This is a version of the GitHub repository with data and simulations. Added separately due to the size constraints in GitHub.
 
 
 The four seperate R scripts in the codebase sub-folder perform the following functions.
