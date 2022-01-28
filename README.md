@@ -28,7 +28,7 @@ The four seperate R scripts in the codebase sub-folder perform the following fun
 
 
 Abstract:- 
-We develop and present a k-Nearest Neighbor Space-Time Simulator that accounts for the spatio-temporal dependence in high dimensional hydroclimatic fields (e.g. wind and solar) and can simulate synthetic realizations of arbitrary length.
-We illustrate how this statistical simulation tool can be used in the context of regional power system planning under a scenario of high reliance on wind and solar generation and when long historical records of wind and solar power generation potential are not available.
-We show how our simulation model can be used to assess the probability distribution of the severity and duration of energy ``droughts" at the network scale that need to be managed by long duration storage or alternate energy sources.
+We develop and present a k-Nearest Neighbor Space-Time Simulator that accounts for the spatiotemporal dependence in high dimensional hydroclimatic fields (e.g., wind and solar) and can simulate synthetic realizations of arbitrary length. 
+We illustrate how this statistical simulation tool can be used in the context of regional power system planning under a scenario of high reliance on wind and solar generation and when long historical records of wind and solar power generation potential are not available. 
+We show how our simulation model can be used to assess the probability distribution of the severity and duration of energy “droughts” at the network scale that need to be managed by long duration storage or alternate energy sources.
 We present this estimation of supply side shortages for the Texas Interconnection.
