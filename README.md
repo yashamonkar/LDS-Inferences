@@ -1,7 +1,8 @@
 # LDS-Inferences
 
 This is the code repository for the paper "A k-Nearest Neighbor Space-Time Simulator with applications to large-scale wind and solar power modelling" by Yash Amonkar (Columbia), David J Farnham (Carnegie Institue for Science/ClimateAi) and Upmanu Lall (Columbia). 
-This work has been submitted to Patterns (https://www.cell.com/patterns/home) for consideration and is in the advanced revision/pre-publication stage.
+This work has been published in to Patterns (https://www.cell.com/patterns/home).
+The document can be found here - https://doi.org/10.1016/j.patter.2022.100454
 
 
 All code to replicate the work done in the paper along with the supplementery materials is archived here. 
